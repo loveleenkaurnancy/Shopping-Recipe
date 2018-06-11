@@ -1,16 +1,35 @@
-import { Recipe } from "./recipe.model";
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from '@angular/core';
 
+import { Recipe } from './recipe.model';
+import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
+
+@Injectable()
 export class RecipeService {
+  recipeSelected = new EventEmitter<Recipe>();
 
-    recipeSelected = new EventEmitter<Recipe>();
-    
-    private recipes : Recipe[] = [
-        new Recipe('Masal Dosa','Test','https://i0.wp.com/media.hungryforever.com/wp-content/uploads/2015/04/Featured-image-masala-dosa-recipe.jpg?ssl=1?w=1269&strip=all&quality=80'),
-        new Recipe('New Masal Dosa','Test','https://i0.wp.com/media.hungryforever.com/wp-content/uploads/2015/04/Featured-image-masala-dosa-recipe.jpg?ssl=1?w=1269&strip=all&quality=80')
+  private recipes : Recipe[] = [
+        new Recipe('Masal Dosa','Test',
+        'https://i0.wp.com/media.hungryforever.com/wp-content/uploads/2015/04/Featured-image-masala-dosa-recipe.jpg?ssl=1?w=1269&strip=all&quality=80',
+    [
+        new Ingredient('Onion',1),
+        new Ingredient('CornFlour',3)
+    ]),
+        new Recipe('Noodles',
+        'Test','https://i0.wp.com/media.hungryforever.com/wp-content/uploads/2015/04/Featured-image-masala-dosa-recipe.jpg?ssl=1?w=1269&strip=all&quality=80',
+    [
+        new Ingredient('Noodles',1),
+        new Ingredient('SOya',4)
+    ])
         ];
 
-    getRecipes() {
-        return this.recipes.slice();
-    }
+  constructor(private slService: ShoppingListService) {}
+
+  getRecipes() {
+    return this.recipes.slice();
+  }
+
+  addIngredientsToShoppingList(ingredients: Ingredient[]) {
+    this.slService.addIngredients(ingredients);
+  }
 }
